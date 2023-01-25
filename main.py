@@ -11,11 +11,12 @@ LIST_FILE = 'list.txt'
 
 videoPaths = [ ]
 index = 0
-for item in sapi.getPlaylistItems(playlistID):
+items = sapi.getPlaylistItems(playlistID)
+for item in items:
     index += 1
     url = yapi.downloadVideo(item)
     videoLength = fw.getVideoLength(url)
-    video = fw.cutVideo(url, videoLength/2, SNIPPET_LENGTH, FADE_LENGTH)
+    video = fw.cutVideo(url, videoLength/2, SNIPPET_LENGTH if index != len(items) else SNIPPET_LENGTH*2, FADE_LENGTH)
     video = fw.addTextOverlay(video, [(f"{index}. {item.title}", 100, 150, 64, 'Roboto-Regular.ttf'), (', '.join(item.artists), 100, 75, 52, 'Roboto-Thin.ttf')], videoLength, FADE_LENGTH)
     videoPaths.append(video)
 
