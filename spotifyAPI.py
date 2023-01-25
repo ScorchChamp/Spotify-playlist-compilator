@@ -2,7 +2,7 @@ import os
 import dotenv
 import base64
 import requests
-
+import hashlib
 
 class spotifySong:
     videoURL = ''
@@ -19,6 +19,10 @@ class spotifySong:
     @property
     def artists(self):
         return [artist['name'] for artist in self._data['artists']]
+    
+    @property
+    def fileName(self):
+        return hashlib.sha256(str(self).encode()).hexdigest()
 
     def __repr__(self):
         return f"<SpotifySong {self.__str__()}>"

@@ -10,7 +10,7 @@ class youtubeAPI:
 
     def downloadVideo(self, spotifySong):
         url = self.getVideoDownloadUrl(str(spotifySong))
-        output = f"{self.outputFolder}{base64.b64encode(str(spotifySong).encode()).decode().replace('/', '-')}.mp4"
+        output = f"{self.outputFolder}{spotifySong.fileName}.mp4"
         urllib.request.urlretrieve(url, output) if not os.path.exists(output) else ''
         return output
 
