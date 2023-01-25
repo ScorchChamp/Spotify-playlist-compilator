@@ -2,7 +2,7 @@ import subprocess
 import os
 
 def normalizeText(t: str):
-  return t.replace('"', '').replace("'", "").replace(":", "\\:").replace("%", "\\%").replace("\\", "\\\\")
+  return t.replace('"', '').replace("'", "").replace(":", "-").replace("%", "*").replace("\\", "\\\\")
 
 def getVideoLength(path):
     return float(subprocess.check_output(f"""ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "{path}" """, shell=True).strip().decode("utf-8"))

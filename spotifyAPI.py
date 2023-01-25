@@ -4,9 +4,10 @@ import base64
 import requests
 import hashlib
 
+
 class spotifySong:
     videoURL = ''
-    
+
     def __init__(self, data):
         self._data = data
         self._artists = data['artists']
@@ -19,7 +20,7 @@ class spotifySong:
     @property
     def artists(self):
         return [artist['name'] for artist in self._data['artists']]
-    
+
     @property
     def fileName(self):
         return hashlib.sha256(str(self).encode()).hexdigest()
@@ -34,6 +35,7 @@ class spotifySong:
 class spotifyAPI:
     ATRequestURL = 'https://accounts.spotify.com/api/token'
     PIRequestURL = 'https://api.spotify.com/v1/playlists/{}/tracks'
+    PRequestURL = 'https://api.spotify.com/v1/playlists/{}'
     grantType = 'client_credentials'
 
     def __init__(self):
@@ -43,6 +45,9 @@ class spotifyAPI:
         result = requests.get(self.PIRequestURL.format(
             playlistID), headers=self.APIRequestHeaders)
         return [spotifySong(item['track']) for item in result.json()['items']]
+
+    def getPlaylistData(self, playlistID):
+        return requests.get(self.PRequestURL.format(playlistID), headers=self.APIRequestHeaders).json()
 
     @property
     def accessToken(self):

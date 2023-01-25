@@ -4,10 +4,11 @@ import ffmpegWrapper as fw
 sapi = spotifyAPI()
 yapi = youtubeAPI()
 
-playlistID = '37i9dQZF1DWWF3yivn1m3D'
+playlistID = input('Playlist ID: ')
 SNIPPET_LENGTH = 10
 FADE_LENGTH = 0.5
 LIST_FILE = 'list.txt'
+pData = sapi.getPlaylistData(playlistID)
 
 videoPaths = [ ]
 index = 0
@@ -27,3 +28,4 @@ with open(LIST_FILE, 'w') as f:
 
 resultFile = fw.concatVideos(LIST_FILE, f'{playlistID}.mp4')
 print(resultFile)
+print(pData['description'], pData['name'], pData['images'])
