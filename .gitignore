@@ -4,3 +4,7 @@ videos/
 __pycache__/
 
 .env
+
+*.mp4
+
+list.txt
