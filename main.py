@@ -7,7 +7,7 @@ yapi = youtubeAPI()
 playlistID = input('Playlist ID: ')
 SNIPPET_LENGTH = 10
 FADE_LENGTH = 0.5
-LIST_FILE = 'list.txt'
+LIST_FILE = f'{playlistID}.txt'
 pData = sapi.getPlaylistData(playlistID)
 
 videoPaths = [ ]
