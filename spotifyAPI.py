@@ -42,17 +42,35 @@ class spotifyAPI:
         dotenv.load_dotenv()
 
     def getPlaylistItems(self, playlistID):
-        result = requests.get(self.PIRequestURL.format(
-            playlistID), headers=self.APIRequestHeaders)
+        responseCode = 0
+        tries = 0
+        maxTries = 5
+        while responseCode != 200:
+            tries += 1
+            if tries > maxTries:
+                raise Exception(f"Failed to get playlist data after {maxTries} tries")
+            result = requests.get(self.PIRequestURL.format(playlistID), headers=self.APIRequestHeaders)
+            responseCode = result.status_code
+            print(responseCode)
         return [spotifySong(item['track']) for item in result.json()['items']]
 
     def getPlaylistData(self, playlistID):
-        return requests.get(self.PRequestURL.format(playlistID), headers=self.APIRequestHeaders).json()
+        responseCode = 0
+        tries = 0
+        maxTries = 5
+        while responseCode != 200:
+            tries += 1
+            if tries > maxTries:
+                raise Exception(f"Failed to get playlist data after {maxTries} tries")
+            result = requests.get(self.PRequestURL.format(playlistID), headers=self.APIRequestHeaders)
+            responseCode = result.status_code
+            print(responseCode)
+        return result.json()
+
 
     @property
     def accessToken(self):
-        result = requests.post(
-            self.ATRequestURL, data=self.requestBody, headers=self.ATRequestHeaders)
+        result = requests.post(self.ATRequestURL, data=self.requestBody, headers=self.ATRequestHeaders)
         return result.json()
 
     @property
