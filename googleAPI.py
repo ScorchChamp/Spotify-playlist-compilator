@@ -19,14 +19,16 @@ httplib2.RETRIES = 1
 MAX_RETRIES = 10
 RETRIABLE_STATUS_CODES = [500, 502, 503, 504]
 RETRIABLE_EXCEPTIONS = (httplib2.HttpLib2Error, IOError, http.client.NotConnected,
-http.client.IncompleteRead, http.client.ImproperConnectionState,
-http.client.CannotSendRequest, http.client.CannotSendHeader,
-http.client.ResponseNotReady, http.client.BadStatusLine)
+                        http.client.IncompleteRead, http.client.ImproperConnectionState,
+                        http.client.CannotSendRequest, http.client.CannotSendHeader,
+                        http.client.ResponseNotReady, http.client.BadStatusLine)
 services = {}
 
+
 def createService(channel):
-    if channel in services: return services[channel]
-    
+    if channel in services:
+        return services[channel]
+
     client_secret_file = f"{BASE_DIR}/auth/client_secrets.json"
     api_name = 'youtube'
     api_version = 'v3'
@@ -46,7 +48,8 @@ def createService(channel):
         if cred and cred.expired and cred.refresh_token:
             cred.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(client_secret_file, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(
+                client_secret_file, SCOPES)
             cred = flow.run_local_server()
 
         with open(pickle_file, 'wb') as token:
@@ -62,50 +65,56 @@ def createService(channel):
         print(e)
         return None
 
+
 def uploadVideo(title, description, tags, uploadDate, categoryID, file, channel, premiere=False):
-        logger.info("Uploading video with youtube service")
-        print(f"Uploading {file}")
-        service = createService(channel)
-        mediaFile = MediaFileUpload(file, chunksize=-1, resumable=True)
-        response_upload = service.videos().insert(
-            part='snippet,status',
-            body=getUploadBody(title, description, tags, uploadDate, categoryID),
-            media_body= mediaFile
-        )
-        response = None
-        error = None
-        retry = 0
-        while response is None:
-            try:
-                print("Uploading file " + file)
-                print(response_upload)
-                status, response = response_upload.next_chunk()
-                if response is not None:
-                    if 'id' in response:
-                        video_id = response['id']
-                        print(f"Video id '{video_id}' was successfully uploaded.")
-                        # if premiere: planPremiere(title, description, uploadDate, categoryID, video_id, service)
-                        return response['id']
-                else:
-                    exit("The upload failed with an unexpected response: %s" % response)
-            except HTTPError as e:
-                if e.resp.status in RETRIABLE_STATUS_CODES: error = "A retriable HTTP error %d occurred:\n%s" % (e.resp.status,e.content)
-                else: raise
-            except RETRIABLE_EXCEPTIONS as e: error = "A retriable error occurred: %s" % e
+    logger.info("Uploading video with youtube service")
+    print(f"Uploading {file}")
+    service = createService(channel)
+    mediaFile = MediaFileUpload(file, chunksize=-1, resumable=True)
+    response_upload = service.videos().insert(
+        part='snippet,status',
+        body=getUploadBody(title, description, tags, uploadDate, categoryID),
+        media_body=mediaFile
+    )
+    response = None
+    error = None
+    retry = 0
+    while response is None:
+        try:
+            print("Uploading file " + file)
+            print(response_upload)
+            status, response = response_upload.next_chunk()
+            if response is not None:
+                if 'id' in response:
+                    video_id = response['id']
+                    print(f"Video id '{video_id}' was successfully uploaded.")
+                    # if premiere: planPremiere(title, description, uploadDate, categoryID, video_id, service)
+                    return response['id']
+            else:
+                exit("The upload failed with an unexpected response: %s" % response)
+        except HTTPError as e:
+            if e.resp.status in RETRIABLE_STATUS_CODES:
+                error = "A retriable HTTP error %d occurred:\n%s" % (
+                    e.resp.status, e.content)
+            else:
+                raise
+        except RETRIABLE_EXCEPTIONS as e:
+            error = "A retriable error occurred: %s" % e
 
-            if error is not None:
-                print(error)
-                retry += 1
-                if retry > MAX_RETRIES: exit("No longer attempting to retry.")
+        if error is not None:
+            print(error)
+            retry += 1
+            if retry > MAX_RETRIES:
+                exit("No longer attempting to retry.")
 
-                max_sleep = 2 ** retry
-                sleep_seconds = random.random() * max_sleep
-                print("Sleeping %f seconds and then retrying..." % sleep_seconds)
-                time.sleep(sleep_seconds)
+            max_sleep = 2 ** retry
+            sleep_seconds = random.random() * max_sleep
+            print("Sleeping %f seconds and then retrying..." % sleep_seconds)
+            time.sleep(sleep_seconds)
+
 
 def getUploadDateISO(year, month, day, hour, minute):
     return datetime.datetime(year, month, day, hour, minute).isoformat()
-
 
 
 def planPremiere(title, description, uploadDate, categoryID, video_id, service):
@@ -151,12 +160,13 @@ def planPremiere(title, description, uploadDate, categoryID, video_id, service):
     except Exception as error:
         print(f"An error occurred: {error}")
 
+
 def getUploadBody(title, description, tags, uploadDate, categoryID):
-    return  {
+    return {
         'snippet': {
             'title': title,
             'description': description,
-            'tags': tags,    
+            'tags': tags,
             'categoryId': categoryID
         },
         'status': {

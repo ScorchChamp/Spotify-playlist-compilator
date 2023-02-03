@@ -35,7 +35,7 @@ class spotifySong:
 class spotifyAPI:
     ATRequestURL = 'https://accounts.spotify.com/api/token'
     PIRequestURL = 'https://api.spotify.com/v1/playlists/{}/tracks?market=US'
-    PRequestURL = 'https://api.spotify.com/v1/playlists/{}'
+    PRequestURL = 'https://api.spotify.com/v1/playlists/{}?market=US'
     grantType = 'client_credentials'
 
     def __init__(self):
