@@ -13,7 +13,7 @@ SNIPPET_LENGTH, FADE_LENGTH = 10, 0.5
 BASE_DIR = f'{os.path.dirname(os.path.abspath(__file__))}'
 
 def run(playlistID, channelID):
-    LIST_FILE = f'{BASE_DIR}/{playlistID}.txt'
+    LIST_FILE = f'{BASE_DIR}/videos/{playlistID}.txt'
     pData = sapi.getPlaylistData(playlistID)
 
     videoPaths = [ ]
