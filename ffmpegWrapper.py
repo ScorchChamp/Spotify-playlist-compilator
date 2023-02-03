@@ -20,6 +20,6 @@ def addTextOverlay(path, settings, videoLength, fadeLength):
     return outputFile
 
 def concatVideos(listFile, outputFile):
-    outputFile = f"{os.path.dirname(os.path.abspath(__file__))}/{outputFile}"
+    outputFile = f"{os.path.dirname(os.path.abspath(__file__))}/videos/{outputFile}"
     os.system(f"""ffmpeg -hide_banner -loglevel error -y -f concat -safe 0 -i "{listFile}" -c copy "{outputFile}" """)
     return outputFile

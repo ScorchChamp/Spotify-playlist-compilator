@@ -1,12 +1,10 @@
 from pytube import Search
 import os
 import urllib.request
-import base64
-
 
 class youtubeAPI:
     def __init__(self):
-        self._videoFolder = '/videos/'
+        self._videoFolder = '/videos/source/'
 
     def downloadVideo(self, spotifySong):
         url = self.getVideoDownloadUrl(str(spotifySong))
@@ -20,5 +18,5 @@ class youtubeAPI:
     @property
     def outputFolder(self):
         path = f'{os.path.dirname(os.path.abspath(__file__))}{self._videoFolder}'
-        os.mkdir(path) if not os.path.exists(path) else ''
+        os.makedirs(path, exist_ok=True)
         return path
