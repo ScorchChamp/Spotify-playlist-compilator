@@ -44,7 +44,7 @@ def run(playlistID, channelID):
 {pData['description']}
 """
     description = re.sub(re.compile('<.*?>'), '', description)
-    title = f"SPOTIFY {str(pData['name']).upper()} - {NOW.strftime('%B')}/{NOW.year}"
+    title = f"SPOTIFY {str(pData['name']).upper()} - {NOW.strftime('%B')} {NOW.year}"
     tags = ["Spotify", "Music", "Top"] + \
         [str(item).replace(":", "-")[:20] for item in items][:15]
 
