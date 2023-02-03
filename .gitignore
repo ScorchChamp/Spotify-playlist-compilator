@@ -16,3 +16,9 @@ Logo.kra
 *.pickle
 
 auth/
+
+Lib/
+
+Scripts/
+
+pyvenv.cfg
