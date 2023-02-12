@@ -4,9 +4,9 @@ import googleAPI
 import ffmpegWrapper as fw
 import os
 import datetime
-import json
 import re
 import sys
+import shutil
 
 sapi = spotifyAPI()
 yapi = youtubeAPI()
@@ -20,15 +20,18 @@ def run(playlistID, channelID):
 
     videoPaths = []
     index = 0
-    items = sapi.getPlaylistItems(playlistID)
+    items = sapi.getPlaylistItems(playlistID)[:5]
     for item in items:
         index += 1
         url = yapi.downloadVideo(item)
         videoLength = fw.getVideoLength(url)
+        snippetLength = SNIPPET_LENGTH if index != 1 else SNIPPET_LENGTH*2
         video = fw.cutVideo(
-            url, videoLength/2, SNIPPET_LENGTH if index != 1 else SNIPPET_LENGTH*2, FADE_LENGTH)
+            url, (videoLength/2) - (snippetLength/2), snippetLength, FADE_LENGTH)
+        if item.blacklisted:
+            video = fw.blurVideo(video)
         video = fw.addTextOverlay(video, [(f"{index}. {item.title}", 100, 150, 64, 'Roboto-Regular.ttf'),
-                                  (', '.join(item.artists), 100, 75, 52, 'Roboto-Thin.ttf')], videoLength, FADE_LENGTH)
+                                  (', '.join(item.artists), 100, 75, 52, 'Roboto-Thin.ttf')] + ([("Cannot play this song due to copyright", 320, 540, 78, 'Roboto-Thin.ttf')] if item.blacklisted else []), videoLength, FADE_LENGTH)
         videoPaths.append(video)
 
     videoPaths.reverse()

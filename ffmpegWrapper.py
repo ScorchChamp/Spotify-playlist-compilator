@@ -2,6 +2,11 @@ import subprocess
 import os
 BASE_DIR = f'{os.path.dirname(os.path.abspath(__file__))}'
 
+def blurVideo(path):
+    outputFile = path.replace(".mp4", f"_blur.mp4")
+    os.system(f"""{BASE_DIR}/ffmpeg -hide_banner -loglevel error -y -i "{path}" -vf "boxblur=10:2" -an "{outputFile}" """)
+    return outputFile
+
 def normalizeText(t: str):
   return t.replace('"', '').replace("'", "").replace(":", "-").replace("%", "*").replace("\\", "\\\\")
 
@@ -15,7 +20,7 @@ def cutVideo(path, startTime, cutLength, fadeLength):
 
 
 def addTextOverlay(path, settings, videoLength, fadeLength):
-    drawTextSettings = ','.join([f"""drawtext=fontfile={fontPath}:text='{normalizeText(text if len(text) < 35 else text[:40] + '...')}':x={xOffset}:y=h-th-{yOffset}:fontsize={fontSize}:fontcolor=white,fade=t=in:st=0:d={fadeLength*3},fade=t=out:st={videoLength-fadeLength}:d={fadeLength}""" for text, xOffset, yOffset, fontSize, fontPath in settings])
+    drawTextSettings = ','.join([f"""drawtext=fontfile={fontPath}:text='{normalizeText(text if len(text) < 40 else text[:38] + '...')}':x={xOffset}:y=h-th-{yOffset}:fontsize={fontSize}:fontcolor=white,fade=t=in:st=0:d={fadeLength*3},fade=t=out:st={videoLength-fadeLength}:d={fadeLength}""" for text, xOffset, yOffset, fontSize, fontPath in settings])
     outputFile = path.replace(".mp4", f"_text.mp4")
     os.system(f"""{BASE_DIR}/ffmpeg -hide_banner -loglevel error -y -i "{path}" -vf "{drawTextSettings},fade=t=out:st={videoLength-fadeLength}:d={fadeLength}" "{outputFile}" """)
     return outputFile

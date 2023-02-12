@@ -3,13 +3,15 @@ import dotenv
 import base64
 import requests
 import hashlib
-
+import yaml
+from yaml.loader import SafeLoader
 
 class spotifySong:
     videoURL = ''
 
     def __init__(self, data):
         self._data = data
+        self._id = data['id']
         self._artists = data['artists']
         self._track = data['track']
 
@@ -24,6 +26,11 @@ class spotifySong:
     @property
     def fileName(self):
         return hashlib.sha256(str(self).encode()).hexdigest()
+
+    @property
+    def blacklisted(self):
+        with open('./settings.yml') as f:
+            return self._id in yaml.load(f, Loader=SafeLoader)['blacklisted_tracks']
 
     def __repr__(self):
         return f"<SpotifySong {self.__str__()}>"

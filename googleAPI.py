@@ -91,6 +91,7 @@ def uploadVideo(title, description, tags, uploadDate, categoryID, file, channel,
                 if 'id' in response:
                     video_id = response['id']
                     print(f"Video id '{video_id}' was successfully uploaded.")
+                    print(f"View the video over at https://www.youtube.com/watch?v={video_id}")
                     # if premiere: planPremiere(title, description, uploadDate, categoryID, video_id, service)
                     return response['id']
             else:
