@@ -38,6 +38,9 @@ def createService(channel):
 
     cred = None
 
+    pickle_folder = f'{BASE_DIR}/auth/pickles/'
+    if not os.path.exists(pickle_folder):
+        os.makedirs(pickle_folder)
     pickle_file = f'{BASE_DIR}/auth/pickles/{channel}.pickle'
 
     if os.path.exists(pickle_file):
