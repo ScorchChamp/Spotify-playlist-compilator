@@ -6,6 +6,7 @@ import os
 import datetime
 import json
 import re
+import sys
 
 sapi = spotifyAPI()
 yapi = youtubeAPI()
@@ -53,5 +54,5 @@ def run(playlistID, channelID):
         2023, NOW.month, NOW.day, 18, 0), '10', resultFile, channelID, premiere=True)
 
 
-playlistID = input('Playlist ID: ')
+playlistID = sys.argv[1]
 run(playlistID, 'UC6HPYeFSbNkL9FFVhdA9UFg')
