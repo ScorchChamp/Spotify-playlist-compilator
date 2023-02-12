@@ -20,7 +20,7 @@ def run(playlistID, channelID):
 
     videoPaths = []
     index = 0
-    items = sapi.getPlaylistItems(playlistID)[:5]
+    items = sapi.getPlaylistItems(playlistID)
     for item in items:
         index += 1
         url = yapi.downloadVideo(item)
