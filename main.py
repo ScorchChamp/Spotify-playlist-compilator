@@ -17,6 +17,7 @@ BASE_DIR = f'{os.path.dirname(os.path.abspath(__file__))}'
 def run(playlistID, channelID):
     LIST_FILE = f'{BASE_DIR}/videos/{playlistID}.txt'
     pData = sapi.getPlaylistData(playlistID)
+    print(pData['name'], pData['description'])
 
     videoPaths = []
     index = 0
@@ -48,7 +49,6 @@ def run(playlistID, channelID):
 
 #Spotify #Music #Top 
 """
-    description = re.sub(re.compile('<.*?>'), '', description)
     title = f"SPOTIFY {str(pData['name']).upper()} - {NOW.strftime('%B')} {NOW.year}"
     tags = ["Spotify", "Music", "Top"] + \
         [str(item).replace(":", "-")[:20] for item in items][:15]

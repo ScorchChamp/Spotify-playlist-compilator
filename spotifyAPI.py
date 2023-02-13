@@ -5,6 +5,11 @@ import requests
 import hashlib
 import yaml
 from yaml.loader import SafeLoader
+import googletrans
+import re
+
+DESC_COVER_REG = r'[C-c]over.*$'
+DESC_HTML_REG = r'<.*?>'
 
 class spotifySong:
     videoURL = ''
@@ -72,7 +77,13 @@ class spotifyAPI:
             result = requests.get(self.PRequestURL.format(playlistID), headers=self.APIRequestHeaders)
             responseCode = result.status_code
             print(responseCode)
-        return result.json()
+        result = result.json()
+        translator = googletrans.Translator()
+        result['description'] = re.sub(DESC_HTML_REG, '', result['description'])
+        result['description'] = re.sub(DESC_COVER_REG, '', result['description'])
+        result['description'] = translator.translate(result['description'], dest='en').text
+        result['name'] = translator.translate(result['name'], dest='en').text
+        return result
 
 
     @property
