@@ -15,7 +15,7 @@ def getVideoLength(path):
 
 def cutVideo(path, startTime, cutLength, fadeLength):
     outputFile = path.replace(".mp4", f"_cut.mp4")
-    os.system(f"""{BASE_DIR}/ffmpeg -hide_banner -loglevel error -y -i "{path}" -ss {startTime} -t {cutLength} -vf "fade=t=in:st={startTime}:d={fadeLength*3},fade=t=out:st={startTime+cutLength-fadeLength}:d={fadeLength},fps=60,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1" -af "afade=t=in:st={startTime}:d={fadeLength*3},afade=t=out:st={startTime+cutLength-fadeLength}:d={fadeLength}" -vcodec libx264 -ar 44100 -preset ultrafast "{outputFile}" """)
+    os.system(f"""{BASE_DIR}/ffmpeg -hide_banner -loglevel error -y -i "{path}" -ss {startTime} -t {cutLength} -af "volume=loudnorm=I=-14:TP=-2:LRA=11:print_format=summary" -vf "fade=t=in:st={startTime}:d={fadeLength*3},fade=t=out:st={startTime+cutLength-fadeLength}:d={fadeLength},fps=60,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1" -af "afade=t=in:st={startTime}:d={fadeLength*3},afade=t=out:st={startTime+cutLength-fadeLength}:d={fadeLength}" -vcodec libx264 -ar 44100 -c:a aac -b:a 192k -preset ultrafast "{outputFile}" """)
     return outputFile
 
 
