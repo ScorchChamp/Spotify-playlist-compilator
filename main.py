@@ -44,8 +44,9 @@ def run(playlistID, channelID):
 
     NOW = datetime.datetime.now()
     description = f"""
-#Spotify #Music #Top 
 {pData['description']}
+
+#Spotify #Music #Top 
 """
     description = re.sub(re.compile('<.*?>'), '', description)
     title = f"SPOTIFY {str(pData['name']).upper()} - {NOW.strftime('%B')} {NOW.year}"
