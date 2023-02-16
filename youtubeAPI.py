@@ -7,9 +7,8 @@ class youtubeAPI:
         self._videoFolder = '/videos/source/'
 
     def downloadVideo(self, spotifySong):
-        url = self.getVideoDownloadUrl(str(spotifySong))
         output = f"{self.outputFolder}{spotifySong.fileName}.mp4"
-        urllib.request.urlretrieve(url, output) if not os.path.exists(output) else ''
+        urllib.request.urlretrieve(self.getVideoDownloadUrl(str(spotifySong)), output) if not os.path.exists(output) else ''
         return output
 
     def getVideoDownloadUrl(self, title):
