@@ -4,9 +4,8 @@ import googleAPI
 import ffmpegWrapper as fw
 import os
 import datetime
-import re
 import sys
-import shutil
+import string
 
 sapi = spotifyAPI()
 yapi = youtubeAPI()
@@ -49,7 +48,7 @@ def run(playlistID, channelID):
 
 #Spotify #Music #Top 
 """
-    title = f"SPOTIFY {str(pData['name']).upper()} - {NOW.strftime('%B')} {NOW.year}"
+    title = string.capwords(f"SPOTIFY {str(pData['name']).upper()} - {NOW.strftime('%B')} {NOW.year}")
     tags = ["Spotify", "Music", "Top"] + \
         [str(item).replace(":", "-")[:20] for item in items][:15]
 
