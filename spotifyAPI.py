@@ -46,7 +46,7 @@ class spotifySong:
 
 class spotifyAPI:
     ATRequestURL = 'https://accounts.spotify.com/api/token'
-    PIRequestURL = 'https://api.spotify.com/v1/playlists/{}/tracks?market=US'
+    PIRequestURL = 'https://api.spotify.com/v1/playlists/{}/tracks?market=US&limit=100&offset={}'
     PRequestURL = 'https://api.spotify.com/v1/playlists/{}?market=US'
     grantType = 'client_credentials'
 
@@ -54,17 +54,25 @@ class spotifyAPI:
         dotenv.load_dotenv()
 
     def getPlaylistItems(self, playlistID):
-        responseCode = 0
-        tries = 0
         maxTries = 5
-        while responseCode != 200:
-            tries += 1
-            if tries > maxTries:
-                raise Exception(f"Failed to get playlist data after {maxTries} tries")
-            result = requests.get(self.PIRequestURL.format(playlistID), headers=self.APIRequestHeaders)
-            responseCode = result.status_code
-            print(responseCode)
-        return [spotifySong(item['track']) for item in result.json()['items']]
+        offset = 0
+        total = 100
+        totalResult = []
+        while offset < total:
+            responseCode = 0
+            tries = 0
+            while responseCode != 200:
+                tries += 1
+                if tries > maxTries:
+                    raise Exception(f"Failed to get playlist data after {maxTries} tries")
+                result = requests.get(self.PIRequestURL.format(playlistID, offset), headers=self.APIRequestHeaders)
+                responseCode = result.status_code
+                totalResult += [spotifySong(item['track']) for item in result.json()['items']]
+                offset = result.json()['offset'] + result.json()['limit']
+                total = result.json()['total']
+                print(result.json()['offset'])
+        print(len(totalResult))
+        return totalResult
 
     def getPlaylistData(self, playlistID):
         responseCode = 0
