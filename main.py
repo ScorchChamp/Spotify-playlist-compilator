@@ -23,7 +23,8 @@ def run(playlistID, channelID):
     items = sapi.getPlaylistItems(playlistID)
     for item in items:
         index += 1
-        url = yapi.downloadVideo(item)
+        try: url = yapi.downloadVideo(item)
+        except: continue
         videoLength = fw.getVideoLength(url)
         snippetLength = SNIPPET_LENGTH if index != 1 else SNIPPET_LENGTH*2
         video = fw.cutVideo(
