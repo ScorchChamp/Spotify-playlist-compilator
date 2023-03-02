@@ -1,7 +1,5 @@
 import os
 from PIL import Image, ImageFont, ImageDraw
-import logging
-logger = logging.getLogger(__name__)
 
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
