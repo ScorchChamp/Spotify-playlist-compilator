@@ -10,6 +10,7 @@ import re
 
 DESC_COVER_REG = r'[C-c]over.*$'
 DESC_HTML_REG = r'<.*?>'
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 class spotifySong:
     videoURL = ''
@@ -86,12 +87,19 @@ class spotifyAPI:
             responseCode = result.status_code
             print(responseCode)
         result = result.json()
-        translator = googletrans.Translator()
+        # translator = googletrans.Translator()
         result['description'] = re.sub(DESC_HTML_REG, '', result['description'])
         result['description'] = re.sub(DESC_COVER_REG, '', result['description'])
-        result['description'] = translator.translate(result['description'], dest='en').text
-        result['name'] = translator.translate(result['name'], dest='en').text
+        # result['description'] = translator.translate(result['description'], dest='en').text
+        # result['name'] = translator.translate(result['name'], dest='en').text
         return result
+    
+    def downloadImage(self, url, fileName):
+        result = requests.get(url)
+        outputFile = f'{BASE_DIR}/assets/{fileName}.png'
+        with open(outputFile, 'wb') as f: f.write(result.content)
+        return outputFile
+        
 
 
     @property
