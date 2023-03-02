@@ -71,8 +71,8 @@ class spotifyAPI:
                 totalResult += [spotifySong(item['track']) for item in result.json()['items']]
                 offset = result.json()['offset'] + result.json()['limit']
                 total = result.json()['total']
-                print(result.json()['offset'])
-        print(len(totalResult))
+                print("Current offset", result.json()['offset'])
+        print("Total results", len(totalResult))
         return totalResult
 
     def getPlaylistData(self, playlistID):
@@ -96,11 +96,11 @@ class spotifyAPI:
     
     def downloadImage(self, url, fileName):
         result = requests.get(url)
-        outputFile = f'{BASE_DIR}/assets/{fileName}.png'
+        if not os.path.exists(f'{BASE_DIR}/assets/thumbnails'):
+            os.makedirs(f'{BASE_DIR}/assets/thumbnails')
+        outputFile = f'{BASE_DIR}/assets/thumbnails/{fileName}.png'
         with open(outputFile, 'wb') as f: f.write(result.content)
         return outputFile
-        
-
 
     @property
     def accessToken(self):

@@ -22,7 +22,9 @@ def run(playlistID, channelID):
     videoPaths = []
     index = 0
     items = sapi.getPlaylistItems(playlistID)
+
     for item in items:
+        print(str(item))
         index += 1
         try: url = yapi.downloadVideo(item)
         except: continue
@@ -37,6 +39,12 @@ def run(playlistID, channelID):
         videoPaths.append(video)
 
     videoPaths.reverse()
+    print("Generating thumbnail")
+    thumbnail = sapi.downloadImage(pData['images'][0]['url'], playlistID)
+    thumbnail = tg.generateThumbnail(thumbnail, str(pData['name']).upper())
+    print("Generating intro")
+    videoPaths[0] = fw.addImageOverlay(videoPaths[0], thumbnail, 2)
+
     with open(LIST_FILE, 'w') as f:
         for file in videoPaths:
             f.write(f"""file 'file:{file}'\n""")
@@ -54,12 +62,8 @@ def run(playlistID, channelID):
     tags = ["Spotify", "Music", "Top"] + \
         [str(item).replace(":", "-")[:20] for item in items][:15]
 
-    print(tags)
     googleAPI.uploadVideo(title, description, tags, googleAPI.getUploadDateISO(
         2023, NOW.month, NOW.day, 18, 0), '10', resultFile, channelID, premiere=True)
-    
-    thumbnail = sapi.downloadImage(pData['images'][0]['url'], playlistID)
-    thumbnail = tg.generateThumbnail(thumbnail, str(pData['name']).upper())
 
 
 playlistID = sys.argv[1]

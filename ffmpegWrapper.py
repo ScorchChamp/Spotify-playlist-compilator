@@ -29,3 +29,10 @@ def concatVideos(listFile, outputFile):
     outputFile = f"{os.path.dirname(os.path.abspath(__file__))}/videos/{outputFile}"
     os.system(f"""{BASE_DIR}/ffmpeg -hide_banner -loglevel error -y -f concat -safe 0 -i "{listFile}" -c copy "{outputFile}" """)
     return outputFile
+
+def addImageOverlay(video, image, duration):
+    outputFile = video.replace(".mp4", f"_overlay.mp4")
+    os.system(f"""{BASE_DIR}/ffmpeg -y -i {video} -loop 1 -i "{image}" -filter_complex "[1:v]fade=out:st={duration}:d=1:alpha=1[ovrl]; [0:v][ovrl]overlay=(W-w)/2:(H-h)/2" -shortest -c:a copy "{outputFile}" """)
+
+    # os.system(f"""{BASE_DIR}/ffmpeg -hide_banner -loglevel error -y -i "{video}" -loop 1 -i "{image}" -c:v libx264 -tune stillimage -c:a aac -b:a 192k -shortest -vf "fade=t=in:st=0:d={duration},fade=t=out:st={duration}:d={duration}" "{outputFile}" """)
+    return outputFile
