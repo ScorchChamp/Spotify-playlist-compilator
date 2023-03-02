@@ -49,7 +49,7 @@ def run(playlistID, channelID):
 
 #Spotify #Music #Top 
 """
-    title = string.capwords(f"SPOTIFY {str(pData['name']).upper()} - {NOW.strftime('%B')} {NOW.year}")
+    title = string.capwords(f"{str(pData['name']).upper()} - {NOW.strftime('%B')} {NOW.year}")
     tags = ["Spotify", "Music", "Top"] + \
         [str(item).replace(":", "-")[:20] for item in items][:15]
 
