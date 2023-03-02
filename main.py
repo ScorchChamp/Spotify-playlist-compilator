@@ -6,6 +6,7 @@ import os
 import datetime
 import sys
 import string
+import thumbnailGenerator as tg
 
 sapi = spotifyAPI()
 yapi = youtubeAPI()
@@ -56,6 +57,9 @@ def run(playlistID, channelID):
     print(tags)
     googleAPI.uploadVideo(title, description, tags, googleAPI.getUploadDateISO(
         2023, NOW.month, NOW.day, 18, 0), '10', resultFile, channelID, premiere=True)
+    
+    thumbnail = sapi.downloadImage(pData['images'][0]['url'], playlistID)
+    thumbnail = tg.generateThumbnail(thumbnail, str(pData['name']).upper())
 
 
 playlistID = sys.argv[1]
