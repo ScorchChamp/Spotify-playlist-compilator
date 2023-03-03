@@ -24,7 +24,7 @@ def generateThumbnail(thumbnailFile, title):
     foreground = foreground.resize((int(foreground.width*ratio), int(foreground.height*ratio)))
     foreground = foreground.filter(ImageFilter.GaussianBlur(radius=10))
     foreground.putalpha(200)
-    image.paste(foreground, (0, int((foreground.height/ratio) - 1920) // 2))
+    image.paste(foreground, (0, -(foreground.height - 1080) // 2))
     image.paste(logo, (0,0), logo)
 
 
@@ -44,6 +44,4 @@ def generateThumbnail(thumbnailFile, title):
         # stroke_width=1
     )  
     image.save(outputFile)
-    image.show()
-
     return outputFile
