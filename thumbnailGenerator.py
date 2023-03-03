@@ -29,14 +29,14 @@ def generateThumbnail(thumbnailFile, title):
     image.paste(logo, (0,0), logo)
 
 
-    font_size = 120
+    font_size = 140
     font = ImageFont.truetype(f"{BASE_DIR}/title.ttf", font_size)     
     draw = ImageDraw.Draw(image)   
     fw, fh = draw.textsize(title, font=font)
-    font = ImageFont.truetype(f"{BASE_DIR}/title.ttf", min(font_size, int(font_size * (900 / max(fw, 900)))))
+    font = ImageFont.truetype(f"{BASE_DIR}/title.ttf", min(font_size, int(font_size * (960 / max(fw, 960)))))
     fw, fh = draw.textsize(title, font=font)
     draw.text(
-        (480 - (fw/2)-5, 180 - (fh/2)+5),
+        (500 - (fw/2)-5, 180 - (fh/2)+5),
         title, 
         "#ff00ff", 
         font=font, 
@@ -45,7 +45,7 @@ def generateThumbnail(thumbnailFile, title):
         # stroke_width=1
     )  
     draw.text(
-        (480 - (fw/2), 180 - (fh/2)),
+        (500 - (fw/2), 180 - (fh/2)),
         title, 
         "white", 
         font=font, 
@@ -55,7 +55,7 @@ def generateThumbnail(thumbnailFile, title):
     )  
 
     date = datetime.datetime.now().strftime('%B %Y').replace(" ", "\n\n")
-    font = ImageFont.truetype(f"{BASE_DIR}/title.ttf", 72)
+    font = ImageFont.truetype(f"{BASE_DIR}/title.ttf", 90)
     fw, fh = draw.textsize(date, font=font)
     draw.text(
         (480 - (fw/2)+5, 720 - (fh/2)-5),
