@@ -35,48 +35,17 @@ def generateThumbnail(thumbnailFile, title):
     fw, fh = draw.textsize(title, font=font)
     font = ImageFont.truetype(f"{BASE_DIR}/title.ttf", min(font_size, int(font_size * (960 / max(fw, 960)))))
     fw, fh = draw.textsize(title, font=font)
-    draw.text(
-        (500 - (fw/2)-5, 180 - (fh/2)+5),
-        title, 
-        "#ff00ff", 
-        font=font, 
-        align="center",
-        # stroke_fill="black",
-        # stroke_width=1
-    )  
-    draw.text(
-        (500 - (fw/2), 180 - (fh/2)),
-        title, 
-        "white", 
-        font=font, 
-        align="center",
-        # stroke_fill="black",
-        # stroke_width=1
-    )  
+    draw.text((500 - (fw/2)-5, 180 - (fh/2)+5),title, "#ff00ff", font=font, align="center")  
+    draw.text((500 - (fw/2), 180 - (fh/2)),title, "white", font=font, align="center")  
 
     date = datetime.datetime.now().strftime('%B %Y').replace(" ", "\n\n")
     font = ImageFont.truetype(f"{BASE_DIR}/title.ttf", 90)
     fw, fh = draw.textsize(date, font=font)
-    draw.text(
-        (480 - (fw/2)+5, 720 - (fh/2)-5),
-        date,
-        "#33ccff",
-        font=font,
-        align="center"
-    )
-    draw.text(
-        (480 - (fw/2), 720 - (fh/2)),
-        date,
-        "white",
-        font=font,
-        align="center"
-    )
+    draw.text((480 - (fw/2)+5, 720 - (fh/2)-5),date,"#33ccff",font=font,align="center")
+    draw.text((480 - (fw/2), 720 - (fh/2)),date,"white",font=font,align="center")
     draw.line((480 - fw/1.5, 725, 480 + fw/1.5, 725), fill="#ff00ff", width=10)
     draw.line((490 - fw/1.5, 735, 490 + fw/1.5, 735), fill="cyan", width=10)
     draw.line((485 - fw/1.5, 730, 485 + fw/1.5, 730), fill="white", width=10)
 
-
-
     image.save(outputFile)
-    image.show()
     return outputFile

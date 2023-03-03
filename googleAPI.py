@@ -183,3 +183,13 @@ def getUploadBody(title, description, tags, uploadDate, categoryID):
         },
         'notifySubscribers': True
     }
+
+
+def upload_thumbnail(channel, video_id, file):       
+    print(f"Uploading thumbnail for {video_id}")
+    service = createService(channel)
+
+    service.thumbnails().set(
+        videoId=video_id,
+        media_body=file
+    ).execute()

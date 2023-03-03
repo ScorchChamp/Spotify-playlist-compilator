@@ -23,7 +23,7 @@ def run(playlistID, channelID):
 
     videoPaths = []
     index = 0
-    items = sapi.getPlaylistItems(playlistID)
+    items = sapi.getPlaylistItems(playlistID)[:3]
     print("Generating thumbnail")
     thumbnail = sapi.downloadImage(pData['images'][0]['url'], playlistID)
     thumbnail = tg.generateThumbnail(thumbnail, string.capwords(pData['name']))
@@ -61,9 +61,10 @@ def run(playlistID, channelID):
     tags = ["Spotify", "Music", "Top"] + \
         [str(item).replace(":", "-")[:20] for item in items][:15]
 
-    googleAPI.uploadVideo(title, description, tags, googleAPI.getUploadDateISO(
+    videoId = googleAPI.uploadVideo(title, description, tags, googleAPI.getUploadDateISO(
         2023, NOW.month, NOW.day, 18, 0), '10', resultFile, channelID, premiere=True)
 
+    googleAPI.upload_thumbnail(channelID, videoId, thumbnail)
 
 playlistID = sys.argv[1]
 run(playlistID, 'UC6HPYeFSbNkL9FFVhdA9UFg')
