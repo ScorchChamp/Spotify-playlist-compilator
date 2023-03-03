@@ -6,6 +6,7 @@ import hashlib
 import yaml
 from yaml.loader import SafeLoader
 import re
+import googletrans
 
 DESC_HTML_REG = r'<.*?>'
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -84,7 +85,9 @@ class spotifyAPI:
             responseCode = result.status_code
             print(responseCode)
         result = result.json()
+        translator = googletrans.Translator()
         result['description'] = re.sub(DESC_HTML_REG, '', result['description'])
+        result['description'] = translator.translate(result['description'], dest='en').text
         return result
     
     def downloadImage(self, url, fileName):
