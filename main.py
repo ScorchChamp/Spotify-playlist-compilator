@@ -17,11 +17,17 @@ BASE_DIR = f'{os.path.dirname(os.path.abspath(__file__))}'
 def run(playlistID, channelID):
     LIST_FILE = f'{BASE_DIR}/videos/{playlistID}.txt'
     pData = sapi.getPlaylistData(playlistID)
-    print(pData['name'], pData['description'])
+    NOW = datetime.datetime.now()
+    title = string.capwords(f"{str(pData['name']).upper()} - {NOW.strftime('%B')} {NOW.year}")
+    print(title, pData['description'])
 
     videoPaths = []
     index = 0
     items = sapi.getPlaylistItems(playlistID)
+    print("Generating thumbnail")
+    thumbnail = sapi.downloadImage(pData['images'][0]['url'], playlistID)
+    thumbnail = tg.generateThumbnail(thumbnail, string.capwords(pData['name']))
+    exit()
 
     for item in items:
         print(str(item))
@@ -39,9 +45,6 @@ def run(playlistID, channelID):
         videoPaths.append(video)
 
     videoPaths.reverse()
-    print("Generating thumbnail")
-    thumbnail = sapi.downloadImage(pData['images'][0]['url'], playlistID)
-    thumbnail = tg.generateThumbnail(thumbnail, str(pData['name']).upper())
     print("Generating intro")
     videoPaths[0] = fw.addImageOverlay(videoPaths[0], thumbnail, 2)
 
@@ -52,13 +55,11 @@ def run(playlistID, channelID):
     resultFile = fw.concatVideos(LIST_FILE, f'{playlistID}.mp4')
     print(pData['description'], pData['name'], pData['images'])
 
-    NOW = datetime.datetime.now()
     description = f"""
 {pData['description']}
 
 #Spotify #Music #Top 
 """
-    title = string.capwords(f"{str(pData['name']).upper()} - {NOW.strftime('%B')} {NOW.year}")
     tags = ["Spotify", "Music", "Top"] + \
         [str(item).replace(":", "-")[:20] for item in items][:15]
 
