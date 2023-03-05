@@ -24,3 +24,5 @@ Scripts/
 pyvenv.cfg
 
 !black_video.mp4
+
+assets/thumbnails
