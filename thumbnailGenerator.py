@@ -1,6 +1,6 @@
 import os
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
-import datetime
+
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -9,7 +9,7 @@ def wrapTitle(text):
     wrapped_text = ""     # initialize the wrapped text
 
     for i, word in enumerate(words):
-        if i % 2 == 0 and i > 0:  # insert a newline after every 4th word
+        if i % 3 == 0 and i > 0:  # insert a newline after every 4th word
             wrapped_text += "\n"
         wrapped_text += word + " "  # add the word and a space to the wrapped text
     return wrapped_text
@@ -20,32 +20,28 @@ def generateThumbnail(thumbnailFile, title):
     image = Image.new(mode="RGBA", size=(1920,1080))
     foreground = Image.open(thumbnailFile).convert("RGBA")
     logo = Image.open('./assets/logoOpaque.png')
-    ratio = 1080/foreground.height
+    ratio = max(1920/foreground.width, 1080/foreground.height)
     foreground = foreground.resize((int(foreground.width*ratio), int(foreground.height*ratio)))
-    # foreground = foreground.filter(ImageFilter.GaussianBlur(radius=1))
-    logo = logo.resize((1920,1080))
+    foreground = foreground.filter(ImageFilter.GaussianBlur(radius=10))
     foreground.putalpha(200)
-    image.paste(foreground, (min(2200-foreground.width, 920), 0))
+    image.paste(foreground, (0, -(foreground.height - 1080) // 2))
     image.paste(logo, (0,0), logo)
 
 
-    font_size = 140
-    font = ImageFont.truetype(f"{BASE_DIR}/title.ttf", font_size)     
+    font_size = 135
+    font = ImageFont.truetype(f"{BASE_DIR}/Roboto-Regular.ttf", font_size)     
     draw = ImageDraw.Draw(image)   
     fw, fh = draw.textsize(title, font=font)
-    font = ImageFont.truetype(f"{BASE_DIR}/title.ttf", min(font_size, int(font_size * (960 / max(fw, 960)))))
+    font = ImageFont.truetype(f"{BASE_DIR}/Roboto-Regular.ttf", int(font_size * (900 / max(fw, 900))))
     fw, fh = draw.textsize(title, font=font)
-    draw.text((500 - (fw/2)-5, 180 - (fh/2)+5),title, "#ff00ff", font=font, align="center")  
-    draw.text((500 - (fw/2), 180 - (fh/2)),title, "white", font=font, align="center")  
-
-    date = datetime.datetime.now().strftime('%B %Y').replace(" ", "\n\n")
-    font = ImageFont.truetype(f"{BASE_DIR}/title.ttf", 90)
-    fw, fh = draw.textsize(date, font=font)
-    draw.text((480 - (fw/2)+5, 720 - (fh/2)-5),date,"#33ccff",font=font,align="center")
-    draw.text((480 - (fw/2), 720 - (fh/2)),date,"white",font=font,align="center")
-    draw.line((480 - fw/1.5, 725, 480 + fw/1.5, 725), fill="#ff00ff", width=10)
-    draw.line((490 - fw/1.5, 735, 490 + fw/1.5, 735), fill="cyan", width=10)
-    draw.line((485 - fw/1.5, 730, 485 + fw/1.5, 730), fill="white", width=10)
-
+    draw.text(
+        (960-(fw/2), 540 - (fh/2)),
+        title, 
+        "white", 
+        font=font, 
+        align="center",
+        # stroke_fill="black",
+        # stroke_width=1
+    )  
     image.save(outputFile)
     return outputFile
