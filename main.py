@@ -27,7 +27,7 @@ def run(playlistID, channelID):
     print("Generating thumbnail")
     thumbnail = sapi.downloadImage(pData['images'][0]['url'], playlistID)
     thumbnail = tg.generateThumbnail(thumbnail, string.capwords(pData['name']))
-    
+    print("Downloading videos")
     for item in items:
         print(str(item))
         index += 1
