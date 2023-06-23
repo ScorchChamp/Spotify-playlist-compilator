@@ -44,8 +44,8 @@ def run(playlistID, channelID):
         videoPaths.append(video)
 
     videoPaths.reverse()
-    print("Generating intro")
-    videoPaths[0] = fw.addImageOverlay(videoPaths[0], thumbnail, 2)
+    # print("Generating intro")
+    # videoPaths[0] = fw.addImageOverlay(videoPaths[0], thumbnail, 2)
 
     with open(LIST_FILE, 'w') as f:
         for file in videoPaths:
